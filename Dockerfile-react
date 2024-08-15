@@ -1,0 +1,18 @@
+# Dockerfile-root
+FROM node:18 as build
+WORKDIR /Single-spa-app
+COPY react-tasks/package*.json ./react-tasks/
+WORKDIR /Single-spa-app/react-tasks
+RUN npm install
+
+COPY . /Single-spa-app
+
+WORKDIR /Single-spa-app/react-tasks
+RUN npm run build
+
+EXPOSE 3000
+CMD ["npm", "start"]
+
+
+
+

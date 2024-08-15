@@ -1,0 +1,18 @@
+# Dockerfile-root
+FROM node:18 as build
+WORKDIR /Single-spa-app
+COPY root-config/package*.json ./root-config/
+WORKDIR /Single-spa-app/root-config
+RUN npm install
+
+COPY . /Single-spa-app
+
+WORKDIR /Single-spa-app/root-config
+RUN npm run build
+
+EXPOSE 9000
+CMD ["npm", "start"]
+
+
+
+

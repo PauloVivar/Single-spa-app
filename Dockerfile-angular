@@ -1,0 +1,9 @@
+FROM node:18
+RUN npm install -g @angular/cli
+WORKDIR /Single-spa-app
+COPY angular-login/package*.json ./
+RUN npm install
+COPY angular-login/ .
+RUN npm run build
+EXPOSE 4200
+CMD ["ng", "serve", "--host", "0.0.0.0"]
