@@ -11,6 +11,7 @@ function TaskProvider({children}){
     saveItem: saveTasks,
     updateTaskStatus,
     deleteItemLocally,
+    getActiveTasks,
     loading,
     error
   } = useBackendStorage('TASKS_V1', []);
@@ -23,18 +24,14 @@ function TaskProvider({children}){
   const [openModal, setOpenModal] = React.useState(false);
 
   //Validar cuantas tareas estan completadas
-  const completedTasks = tasks.filter(
-    task => task.status === "COM"
-  ).length;
-  const totalTasks = tasks.length;
+  const activeTasks = getActiveTasks();
+  const totalTasks = activeTasks.length;
+  const completedTasks = activeTasks.filter(task => task.status === "COM").length;
 
   //Buscar tarea
-  const searchTasks = tasks.filter((task) => {
-    if (!task || typeof task.description !== 'string') return false;
-    const taskText = task.description.toLowerCase();
-    const searchText = searchValue.toLowerCase();
-    return taskText.includes(searchText);
-  });
+  const searchTasks = getActiveTasks().filter(task =>
+    task.description.toLowerCase().includes(searchValue.toLowerCase())
+  );
 
   //Función con la lógica para Agregar una nueva tareas
   const addTask = async (description) => {
@@ -51,8 +48,31 @@ function TaskProvider({children}){
   };
 
   //Función con la lógica para eliminar tareas existentes
-  const deleteTask = (id) => {
-    deleteItemLocally(id);
+  // const deleteTask = (id) => {
+  //   deleteItemLocally(id);
+  // };
+  const deleteTask = async (id) => {
+    try {
+      const response = await fetch(`http://185.209.230.19:8080/task`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: id,
+          status: "CAN"
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      deleteItemLocally(id);
+    } catch (error) {
+      setError(error.message);
+      console.error("Error al cancelar la tarea:", error);
+    }
   };
 
   return(
@@ -68,6 +88,7 @@ function TaskProvider({children}){
       completeTask,
       uncompleteTask,
       deleteTask,
+      getActiveTasks,
       openModal,
       setOpenModal
     }}>

@@ -27,7 +27,7 @@ function TaskForm() {
 
   return (
     <form onSubmit={onSubmit}>
-      <label>Esribe tu nueva Tarea</label>
+      <label>Escribe tu nueva Tarea</label>
       <textarea
         placeholder="Ingresa una nueva tarea"
         value={newTaskValue}

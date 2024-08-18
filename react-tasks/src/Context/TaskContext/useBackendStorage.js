@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 function useBackendStorage(key, initialValue){
 
@@ -6,20 +6,32 @@ function useBackendStorage(key, initialValue){
   const[loading, setLoading] = React.useState(true);
   const[error, setError] = React.useState(null);
 
+  //test sessionStorange
+  const [idUser, setIdUser] = React.useState(() => {
+    return sessionStorage.getItem('idUser') || "1"; // Usa "1" como valor por defecto si no hay idUser
+  });
+
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
+
   useEffect(() => {
-    fetchData();
+    const checkUserSession = () => {
+      const storedIdUser = sessionStorage.getItem('idUser') || "1";
+      if (storedIdUser !== idUser) {
+        setIdUser(storedIdUser);
+      }
+    };
+
+    checkUserSession();
+    const intervalId = setInterval(checkUserSession, 1000);
+
+    return () => clearInterval(intervalId);
   }, []);
 
-  //generacion de idUser temporal
-  // function getOrCreateUserId() {
-  //   let userId = localStorage.getItem('userId');
-  //   if (!userId) {
-  //     // Genera un ID aleatorio entre 1 y 1000000
-  //     userId = Math.floor(Math.random() * 1000000) + 1;
-  //     localStorage.setItem('userId', userId.toString());
-  //   }
-  //   return parseInt(userId, 10);
-  // }
+  useEffect(() => {
+    fetchData();
+  }, [idUser]);
 
   const fetchData = async () => {
     try {
@@ -43,7 +55,7 @@ function useBackendStorage(key, initialValue){
   //Función para persistir los datos en mi backend
   const saveItem = async (newTask) => {
     try {
-      const idUser = "1";
+      //const idUser = "1";
       const taskToSave = {
         idUser: idUser,
         description: newTask.description,
@@ -111,13 +123,26 @@ function useBackendStorage(key, initialValue){
   };
 
   //test
-  const deleteItemLocally = (taskId) => {
-    const updatedItems = item.filter(task => task.id !== taskId);
-    setItem(updatedItems);
-    localStorage.setItem(key, JSON.stringify(updatedItems));
+  // const deleteItemLocally = (taskId) => {
+  //   const updatedItems = item.filter(task => task.id !== taskId);
+  //   setItem(updatedItems);
+  //   localStorage.setItem(key, JSON.stringify(updatedItems));
+  // };
+
+  const deleteItemLocally = (id) => {
+    setItem(prevItems => 
+      prevItems.map(task => 
+        task.id === id ? { ...task, status: "CAN" } : task
+      )
+    );
+    localStorage.setItem(key, JSON.stringify(item));
   };
 
-  return {item, saveItem, updateTaskStatus, deleteItemLocally, loading, error};
+  const getActiveTasks = () => {
+    return item.filter(task => task.status === "COM" || task.status === "PEN");
+  };
+  
+  return {item, saveItem, updateTaskStatus, deleteItemLocally, getActiveTasks, loading, error, idUser};
 }
 
 export { useBackendStorage };
