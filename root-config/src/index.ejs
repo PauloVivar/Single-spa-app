@@ -17,8 +17,10 @@
     This CSP allows any SSL-enabled host and for arbitrary eval(), but you should limit these directives further to increase your app's security.
     Learn more about CSP policies at https://content-security-policy.com/#directive
   -->
+
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: localhost:*; script-src 'unsafe-inline' 'unsafe-eval' https: localhost:* ; connect-src https: localhost:* ws://localhost:* http://185.209.230.19:8080 ; style-src 'unsafe-inline' https:; object-src 'none';">
   <meta name="importmap-type" content="systemjs-importmap" />
+  
   <!-- If you wish to turn off import-map-overrides for specific environments (prod), uncomment the line below -->
   <!-- More info at https://github.com/joeldenning/import-map-overrides/blob/master/docs/configuration.md#domain-list -->
   <!-- <meta name="import-map-overrides-domains" content="denylist:prod.example.com" /> -->
@@ -30,7 +32,9 @@
     3. Global variable
 
     More information about shared dependencies can be found at https://single-spa.js.org/docs/recommended-setup#sharing-with-import-maps.
-  -->
+    -->
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/single-spa@5.9.0/lib/system/single-spa.min.js" as="script" crossorigin="anonymous">
+
   <script type="systemjs-importmap">
     {
       "imports": {
@@ -40,11 +44,13 @@
         "@ups/root-config": "http://localhost:9000/ups-root-config.js",
         "@ups/react-tasks": " http://localhost:3000/ups-react-tasks.js",
         "@ups/angular-login": " http://localhost:4200/main.js"
-      
       }
     }
   </script>
-  <link rel="preload" href="https://cdn.jsdelivr.net/npm/single-spa@5.9.0/lib/system/single-spa.min.js" as="script">
+
+  <!-- "@ups/root-config": "http://localhost:9000/ups-root-config.js",
+  "@ups/react-tasks": " http://localhost:3000/ups-react-tasks.js",
+  "@ups/angular-login": " http://localhost:4200/main.js" -->
 
   <!-- Add your organization's prod import map URL to this script's src  -->
   <!-- <script type="systemjs-importmap" src="/importmap.json"></script> -->
@@ -66,6 +72,7 @@
     Learn more about why at https://single-spa.js.org/docs/ecosystem-angular/#zonejs
   -->
   <script src="https://cdn.jsdelivr.net/npm/zone.js@0.11.3/dist/zone.min.js"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/import-map-overrides@2.2.0/dist/import-map-overrides.js"></script>
   <% if (isLocal) { %>
   <script src="https://cdn.jsdelivr.net/npm/systemjs@6.8.3/dist/system.js"></script>

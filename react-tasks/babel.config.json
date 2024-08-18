@@ -7,7 +7,6 @@
         "runtime": "automatic"
       }
     ],
-    "@babel/preset-typescript"
   ],
   "plugins": [
     [
