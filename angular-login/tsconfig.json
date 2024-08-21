@@ -29,6 +29,12 @@
       "dom"
     ]
   },
+  "files": [
+    "src/main.single-spa.ts"
+  ],
+  "include": [
+    "src/**/*.d.ts"
+  ],
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,

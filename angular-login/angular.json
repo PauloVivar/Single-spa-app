@@ -16,6 +16,7 @@
             "outputPath": "dist/angular-login",
             "index": "src/index.html",
             "main": "src/main.single-spa.ts",
+
             "polyfills": [
               "zone.js"
             ],
@@ -71,7 +72,10 @@
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-
+            "proxyConfig": "src/proxy.conf.json",
+            "headers": {
+              "Content-Security-Policy": "default-src 'self'; connect-src 'self' http://185.209.230.19:8081 https: localhost:* ws://localhost:*;"
+            }
           },
           "configurations": {
             "production": {

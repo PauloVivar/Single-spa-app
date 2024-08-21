@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useBackendStorage } from './useBackendStorage';
 
 const TaskContext = React.createContext();
@@ -13,8 +13,32 @@ function TaskProvider({children}){
     deleteItemLocally,
     getActiveTasks,
     loading,
-    error
+    error,
+    idUser
   } = useBackendStorage('TASKS_V1', []);
+
+  //ini
+  const [userName, setUserName] = React.useState('');
+
+  useEffect(() => {
+    const user = JSON.parse(sessionStorage.getItem('user'));
+    if (user && user.userName) {
+      setUserName(user.userName);
+    }
+  }, []);
+
+  const logout = () => {
+    sessionStorage.removeItem('user');
+    window.location.href = '/login';
+  };
+  //fin
+
+  useEffect(() => {
+    if (!idUser) {
+      // Redirigir al login si no hay usuario
+      window.location.href = '/login';
+    }
+  }, [idUser]);
 
   //estado Search
   const [searchValue, setSearchValue] = React.useState('');
@@ -90,7 +114,10 @@ function TaskProvider({children}){
       deleteTask,
       getActiveTasks,
       openModal,
-      setOpenModal
+      setOpenModal,
+      idUser,
+      userName,
+      logout
     }}>
       {children}
     </TaskContext.Provider>

@@ -14,6 +14,18 @@ module.exports = (webpackConfigEnv, argv) => {
 
   return merge(defaultConfig, {
     // modify the webpack config however you'd like to by adding to this object
+    devServer: {
+      port: 9000,
+      proxy: {
+        '/api': {
+          target: 'http://185.209.230.19:8081',
+          pathRewrite: {'^/api' : ''},
+          changeOrigin: true,
+          secure: false,
+          logLevel: 'debug'
+        }
+      }
+    },
     plugins: [
       new HtmlWebpackPlugin({
         inject: false,

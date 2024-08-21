@@ -6,6 +6,7 @@ function TaskForm() {
   const {
     addTask,
     setOpenModal,
+    userName,
   } = React.useContext(TaskContext);
 
   //estado local
@@ -27,7 +28,7 @@ function TaskForm() {
 
   return (
     <form onSubmit={onSubmit}>
-      <label>Escribe tu nueva Tarea</label>
+      <label>Hola {userName}, escribe tu nueva Tarea!</label>
       <textarea
         placeholder="Ingresa una nueva tarea"
         value={newTaskValue}

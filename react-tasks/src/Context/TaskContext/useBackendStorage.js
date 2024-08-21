@@ -7,35 +7,35 @@ function useBackendStorage(key, initialValue){
   const[error, setError] = React.useState(null);
 
   //test sessionStorange
-  const [idUser, setIdUser] = React.useState(() => {
-    return sessionStorage.getItem('idUser') || "1"; // Usa "1" como valor por defecto si no hay idUser
-  });
+  // const [idUser, setIdUser] = React.useState(() => {
+  //   return sessionStorage.getItem('idUser') || "1"; // Usa "1" como valor por defecto si no hay idUser
+  // });
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  // obtener el idUser
+  const getIdUser = () => sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).id : null;
+
+  const [idUser, setIdUser] = React.useState(getIdUser);
 
   useEffect(() => {
-    const checkUserSession = () => {
-      const storedIdUser = sessionStorage.getItem('idUser') || "1";
-      if (storedIdUser !== idUser) {
-        setIdUser(storedIdUser);
+    const handleStorageChange = () => {
+      const newIdUser = getIdUser();
+      if (newIdUser !== idUser) {
+        setIdUser(newIdUser);
       }
     };
 
-    checkUserSession();
-    const intervalId = setInterval(checkUserSession, 1000);
-
-    return () => clearInterval(intervalId);
-  }, []);
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, [idUser]);
 
   useEffect(() => {
     fetchData();
   }, [idUser]);
 
   const fetchData = async () => {
+    if (!idUser) return;
+
     try {
-      const idUser = "1";
       setLoading(true);
       const response = await fetch(`http://185.209.230.19:8080/task?idUser=${idUser}`);
       if (!response.ok) {

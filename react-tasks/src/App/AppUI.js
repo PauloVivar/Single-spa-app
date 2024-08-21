@@ -12,6 +12,7 @@ import { TasksError } from '../Components/TasksError';
 import { TasksEmpty } from '../Components/TasksEmpty';
 import { Modal } from '../Components/Modal';
 import { TaskForm } from '../Components/TaskForm';
+import { LogoutButton } from '../Components/LogoutButton';
 
 function AppUI() {
 
@@ -28,6 +29,7 @@ function AppUI() {
 
   return (
     <>
+      <LogoutButton />
       <TaskCounter />
       <TaskSearch />
 
